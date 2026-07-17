@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: opsmind-ai-backend
+    env: docker
+    plan: free # change to starter for always‑on if needed
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: SUPABASE_URL
+        fromSecret: SUPABASE_URL
+      - key: SUPABASE_KEY
+        fromSecret: SUPABASE_KEY
+      - key: KAGGLE_USERNAME
+        fromSecret: KAGGLE_USERNAME
+      - key: KAGGLE_KEY
+        fromSecret: KAGGLE_KEY
+      - key: DATABASE_URL
+        fromSecret: DATABASE_URL
+    autoDeploy: true
