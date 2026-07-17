@@ -260,6 +260,36 @@ def get_forecasts(sku: str = "SKU-001", horizon: int = 30, db: Session = Depends
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.post("/ingest")
+@app.post("/api/ingest")
+def trigger_ingestion(db: Session = Depends(get_db)):
+    """Trigger the data ingestion pipeline."""
+    try:
+        import sys
+        main_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.dirname(main_dir)
+        if project_root not in sys.path:
+            sys.path.append(project_root)
+
+        from dataset.generate_mock_data import generate_mock_data
+        from utils.preprocess import clean_data
+        from services.ingestion import ingest_dataframe_to_db
+
+        raw_csv_path = os.path.join(project_root, "dataset", "raw", "warehouse_sales_raw.csv")
+        raw_df = generate_mock_data(raw_csv_path)
+        cleaned_df = clean_data(raw_df, numeric_cols=["quantity", "unit_price", "reorder_level"])
+        telemetry = ingest_dataframe_to_db(db, cleaned_df)
+
+        return {
+            "status": "success",
+            "total_products_loaded": telemetry["total_products_loaded"],
+            "total_transactions_recorded": telemetry["total_transactions_recorded"],
+            "message": "Data pipeline executed, cleansed, and committed successfully."
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Ingestion pipeline flow failed: {str(e)}")
+
+
 @app.get("/config")
 @app.get("/api/config")
 def get_config():

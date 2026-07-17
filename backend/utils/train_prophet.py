@@ -6,7 +6,7 @@
 from prophet import Prophet
 import pandas as pd
 from sqlalchemy.orm import Session
-from models.inventory import Transaction, Product
+from models import Transaction, Product
 
 def get_history(db: Session, sku: str) -> pd.DataFrame:
     """Load transaction history for a given SKU and return df with columns ds (date) and y (quantity)."""

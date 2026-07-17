@@ -1,7 +1,7 @@
 import uuid
 import pandas as pd
 from sqlalchemy.orm import Session
-from models.inventory import Product, Transaction
+from models import Product, Transaction
 
 def ingest_dataframe_to_db(db: Session, df: pd.DataFrame) -> dict:
     """

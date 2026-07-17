@@ -11,7 +11,7 @@ import os
 import joblib
 import pandas as pd
 from sqlalchemy.orm import Session
-from models.inventory import Forecast, Product, Transaction
+from models import Forecast, Product, Transaction
 from utils.train_prophet import get_history, train_prophet, forecast_prophet
 from utils.train_xgboost import prepare_features, split_chronological, train_xgb
 from sklearn.metrics import mean_squared_error, mean_absolute_error

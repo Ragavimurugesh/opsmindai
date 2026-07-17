@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 from services.ml_engine import train_and_select
-from models.inventory import Product, Forecast
+from models import Product, Forecast
 
 router = APIRouter(prefix="/api/v1/predict", tags=["Forecasting"])
 
