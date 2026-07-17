@@ -10,9 +10,6 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  defs,
-  linearGradient,
-  stop,
 } from 'recharts';
 import {
   Package,
