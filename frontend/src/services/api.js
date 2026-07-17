@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000',
-  timeout: 15000,
+  timeout: 60000,   // 60s default — ingestion pipeline can take ~20s
 });
 
 // Global response interceptor for graceful error logging
@@ -44,7 +44,8 @@ export const fetchDecisions = async () => {
 
 // ── Ingestion trigger ─────────────────────────────────────────────────────────
 export const triggerIngestion = async () => {
-  const res = await api.post('/ingest');
+  // Override timeout to 90s — mock data generation + DB bulk insert takes ~20s
+  const res = await api.post('/ingest', null, { timeout: 90000 });
   return res.data;
 };
 

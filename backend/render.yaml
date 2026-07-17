@@ -1,19 +1,21 @@
 services:
   - type: web
     name: opsmind-ai-backend
-    env: docker
-    plan: free # change to starter for always‑on if needed
-    dockerfilePath: ./Dockerfile
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
-    envVars:
-      - key: SUPABASE_URL
-        fromSecret: SUPABASE_URL
-      - key: SUPABASE_KEY
-        fromSecret: SUPABASE_KEY
-      - key: KAGGLE_USERNAME
-        fromSecret: KAGGLE_USERNAME
-      - key: KAGGLE_KEY
-        fromSecret: KAGGLE_KEY
-      - key: DATABASE_URL
-        fromSecret: DATABASE_URL
     autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        sync: false         # Set manually in Render Dashboard
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: ENVIRONMENT
+        value: production
