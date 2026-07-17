@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import {
   ResponsiveContainer,
   AreaChart,
@@ -105,7 +106,7 @@ const DarkTooltip = ({ active, payload, label }) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // KPI Card
 // ─────────────────────────────────────────────────────────────────────────────
-function KpiCard({ icon: Icon, label, value, subtext, iconColor, iconBg, pulse, accentColor = 'blue' }) {
+function KpiCard({ icon: Icon, label, value, subtext, iconColor, iconBg, pulse, accentColor = 'blue', to }) {
   const glowMap = {
     blue: 'hover:shadow-blue-500/10',
     red: 'hover:shadow-red-500/10',
@@ -113,12 +114,12 @@ function KpiCard({ icon: Icon, label, value, subtext, iconColor, iconBg, pulse, 
     indigo: 'hover:shadow-indigo-500/10',
   };
 
-  return (
+  const cardContent = (
     <div
       className={`group relative bg-[#161B26]/70 backdrop-blur border border-[#242F41] rounded-2xl p-5
                   flex items-center gap-4 overflow-hidden
                   hover:border-[#3a4a65] hover:shadow-xl ${glowMap[accentColor] || glowMap.blue}
-                  transition-all duration-300 hover:-translate-y-1 cursor-default`}
+                  transition-all duration-300 hover:-translate-y-1 ${to ? 'cursor-pointer' : 'cursor-default'}`}
     >
       {/* Background glow blob */}
       <div className={`absolute -top-6 -right-6 w-20 h-20 rounded-full opacity-10 blur-2xl ${iconBg}`} />
@@ -136,12 +137,17 @@ function KpiCard({ icon: Icon, label, value, subtext, iconColor, iconBg, pulse, 
       </div>
     </div>
   );
+
+  if (to) {
+    return <Link to={to} className="block select-none">{cardContent}</Link>;
+  }
+  return cardContent;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Section Header
 // ─────────────────────────────────────────────────────────────────────────────
-function SectionHeader({ icon: Icon, title, subtitle, badge }) {
+function SectionHeader({ icon: Icon, title, subtitle, badge, to }) {
   return (
     <div className="flex items-center justify-between mb-5">
       <div className="flex items-center gap-3">
@@ -149,7 +155,14 @@ function SectionHeader({ icon: Icon, title, subtitle, badge }) {
           <Icon size={16} className="text-blue-400" />
         </div>
         <div>
-          <h3 className="text-sm font-bold text-white leading-none">{title}</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-sm font-bold text-white leading-none">{title}</h3>
+            {to && (
+              <Link to={to} className="text-[10px] text-blue-400 hover:text-blue-300 hover:underline transition-colors font-medium">
+                (View Detail →)
+              </Link>
+            )}
+          </div>
           {subtitle && <p className="text-[11px] text-slate-500 mt-0.5">{subtitle}</p>}
         </div>
       </div>
@@ -371,6 +384,7 @@ export default function Dashboard() {
           iconBg="bg-blue-500/15"
           iconColor="text-blue-400"
           accentColor="blue"
+          to="/ledger"
         />
         <KpiCard
           icon={AlertTriangle}
@@ -381,6 +395,7 @@ export default function Dashboard() {
           iconColor={lowStockItems > 0 ? 'text-red-400' : 'text-slate-400'}
           pulse={lowStockItems > 0}
           accentColor="red"
+          to="/ledger"
         />
         <KpiCard
           icon={ShieldCheck}
@@ -390,6 +405,7 @@ export default function Dashboard() {
           iconBg="bg-emerald-500/15"
           iconColor="text-emerald-400"
           accentColor="emerald"
+          to="/ledger"
         />
         <KpiCard
           icon={BrainCircuit}
@@ -399,6 +415,7 @@ export default function Dashboard() {
           iconBg="bg-indigo-500/15"
           iconColor="text-indigo-400"
           accentColor="indigo"
+          to="/logs"
         />
       </div>
 
@@ -413,6 +430,7 @@ export default function Dashboard() {
             title="Demand Forecasting Trend"
             subtitle="Prophet predictive timeline · Stock vs Forecast"
             badge="Prophet AI"
+            to="/forecasts"
           />
 
           {loading ? (
@@ -504,6 +522,7 @@ export default function Dashboard() {
             title="Stock vs Sales Comparison"
             subtitle="Current stock on hand vs estimated sales across core products"
             badge="Live Snapshot"
+            to="/ledger"
           />
 
           {loading ? (

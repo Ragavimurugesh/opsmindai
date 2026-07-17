@@ -1,0 +1,1 @@
+UX: Add clickable cards/charts for details navigation and implement responsive mobile menu drawer in Layout

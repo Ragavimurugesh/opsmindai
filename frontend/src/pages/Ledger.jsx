@@ -35,7 +35,7 @@ export default function Ledger() {
             {inventory.map((item) => (
               <tr key={item.sku} className="text-slate-300 hover:bg-brand-border/20 transition-colors">
                 <td className="py-3.5 px-4 font-mono font-semibold text-brand-accent">{item.sku}</td>
-                <td className="py-3.5 px-4 font-medium text-white">{item.name}</td>
+                <td className="py-3.5 px-4 font-medium text-white">{item.product_name}</td>
                 <td className="py-3.5 px-4">{item.category}</td>
                 <td className="py-3.5 px-4 font-bold text-slate-100">{item.stock_on_hand}</td>
                 <td className="py-3.5 px-4">{item.allocated_stock}</td>
