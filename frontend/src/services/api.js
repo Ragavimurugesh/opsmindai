@@ -54,4 +54,10 @@ export const checkDatabaseHealth = async () => {
   return res.data;
 };
 
+// ── System Config ─────────────────────────────────────────────────────────────
+export const fetchConfig = async () => {
+  const res = await api.get('/config');
+  return res.data;
+};
+
 export default api;

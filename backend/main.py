@@ -4,6 +4,7 @@ OpsMind AI - FastAPI Backend
 Central API server exposing inventory, predictions, decisions, and forecast endpoints.
 """
 
+import os
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -257,3 +258,18 @@ def get_forecasts(sku: str = "SKU-001", horizon: int = 30, db: Session = Depends
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/config")
+@app.get("/api/config")
+def get_config():
+    """Expose Supabase credentials and connection info to UI Profile page."""
+    return {
+        "supabase_url": os.getenv("SUPABASE_URL", "https://wvbuqgfghbeyiifpgqxh.supabase.co"),
+        "supabase_anon_key": os.getenv("SUPABASE_ANON_KEY", ""),
+        "supabase_service_role_key": os.getenv("SUPABASE_SERVICE_ROLE_KEY", ""),
+        "database_url": os.getenv("DATABASE_URL", ""),
+        "project_ref": "wvbuqgfghbeyiifpgqxh",
+        "environment": os.getenv("ENVIRONMENT", "development")
+    }
+
