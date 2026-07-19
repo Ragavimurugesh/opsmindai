@@ -30,6 +30,10 @@ if not _db_url:
     print("ERROR: Neither SUPABASE_DB_URL nor DATABASE_URL is set.")
     sys.exit(1)
 
+# SQLAlchemy 1.4+ and 2.0+ require postgresql:// instead of postgres://
+if _db_url.startswith("postgres://"):
+    _db_url = _db_url.replace("postgres://", "postgresql://", 1)
+
 # ── 2. SQLAlchemy setup ──────────────────────────────────────────────────────
 from sqlalchemy import (
     create_engine, Column, Integer, String, Float, Date, DateTime,
